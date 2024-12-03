@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 *.iml
 .kotlin
 .gradle
@@ -16,3 +17,38 @@ captures
 !*.xcodeproj/project.xcworkspace/
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
+=======
+# Gradle files
+.gradle/
+build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Log/OS Files
+*.log
+
+# Android Studio generated files and folders
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+output.json
+
+# IntelliJ
+*.iml
+.idea/
+misc.xml
+deploymentTargetDropDown.xml
+render.experimental.xml
+
+# Keystore files
+*.jks
+*.keystore
+
+# Google Services (e.g. APIs or Firebase)
+google-services.json
+
+# Android Profiling
+*.hprof
+>>>>>>> ffe13a91bc5381139d1e705ba66cdb178753fdbe
