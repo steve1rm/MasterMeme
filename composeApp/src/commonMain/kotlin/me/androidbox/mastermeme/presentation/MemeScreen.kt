@@ -2,8 +2,15 @@ package me.androidbox.mastermeme.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
@@ -26,7 +33,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import mastermeme.composeapp.generated.resources.Res
+import mastermeme.composeapp.generated.resources.ajtl_46
+import mastermeme.composeapp.generated.resources.eyvu_45
+import mastermeme.composeapp.generated.resources.left_exit_12_off_ramp_3
 import mastermeme.composeapp.generated.resources.meme_man
+import mastermeme.composeapp.generated.resources.p2is_38
+import mastermeme.composeapp.generated.resources.rcrc1_39
+import mastermeme.composeapp.generated.resources.t8r9a_26
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -54,17 +67,76 @@ fun MemeScreen(
         )
     )
 
+    val state = rememberLazyGridState()
+    val listOfMeme = listOf(
+        MemeImages(
+            Res.drawable.ajtl_46),
+        MemeImages(
+            Res.drawable.left_exit_12_off_ramp_3),
+        MemeImages(
+            Res.drawable.p2is_38),
+        MemeImages(
+            Res.drawable.rcrc1_39),
+        MemeImages(
+            Res.drawable.t8r9a_26),
+        MemeImages(
+            Res.drawable.ajtl_46),
+        MemeImages(
+            Res.drawable.left_exit_12_off_ramp_3),
+        MemeImages(
+            Res.drawable.p2is_38),
+        MemeImages(
+            Res.drawable.rcrc1_39),
+        MemeImages(
+            Res.drawable.t8r9a_26),
+        MemeImages(
+            Res.drawable.ajtl_46),
+        MemeImages(
+            Res.drawable.left_exit_12_off_ramp_3),
+        MemeImages(
+            Res.drawable.p2is_38),
+        MemeImages(
+            Res.drawable.rcrc1_39),
+        MemeImages(
+            Res.drawable.t8r9a_26),
+        MemeImages(
+            Res.drawable.ajtl_46),
+        MemeImages(
+            Res.drawable.left_exit_12_off_ramp_3),
+        MemeImages(
+            Res.drawable.p2is_38),
+        MemeImages(
+            Res.drawable.rcrc1_39),
+        MemeImages(
+            Res.drawable.t8r9a_26))
+
     BottomSheetScaffold(
         modifier = modifier,
         sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
         sheetPeekHeight = 0.dp,
         scaffoldState = bottomSheetState,
         sheetContent = {
-            Icon(
-                imageVector = Icons.Default.Close,
-                contentDescription = null
-            )
-            Text(text = "This is the bottom sheet content", fontSize = 32.sp)
+            Text(text = "Choose your template", fontSize = 20.sp)
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = "Choose your template for your next meme masterspace", fontSize = 14.sp)
+
+            LazyVerticalGrid(
+                modifier = Modifier.fillMaxSize(),
+                columns = GridCells.Fixed(count = 2),
+                state = state,
+                content = {
+                    items(
+                        count = listOfMeme.count(),
+                        key = { index ->
+                            index
+                        },
+                        itemContent = { index ->
+                            MemeItem(
+                                listOfMeme[index].imageRes
+                            )
+                        }
+                    )
+                })
         },
         content = { paddingValues ->
             Box(
