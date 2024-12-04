@@ -40,11 +40,13 @@ import mastermeme.composeapp.generated.resources.meme_man
 import mastermeme.composeapp.generated.resources.p2is_38
 import mastermeme.composeapp.generated.resources.rcrc1_39
 import mastermeme.composeapp.generated.resources.t8r9a_26
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun MemeScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClickMemem: (memeRes: DrawableResource) -> Unit
 ) {
 
     val coroutineScope = rememberCoroutineScope()
@@ -132,7 +134,10 @@ fun MemeScreen(
                         },
                         itemContent = { index ->
                             MemeItem(
-                                listOfMeme[index].imageRes
+                                listOfMeme[index].imageRes,
+                                onClickMeme = { resMeme ->
+
+                                }
                             )
                         }
                     )
