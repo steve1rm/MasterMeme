@@ -9,10 +9,12 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
@@ -89,31 +91,50 @@ fun MemeEditScreen(
 
 
 @Composable
-private fun DraggableText() {
+private fun BoxScope.DraggableText() {
     var offsetX by remember { mutableStateOf(0f) }
     var offsetY by remember { mutableStateOf(0f) }
     val textValue = remember {
         mutableStateOf("DOUBLE TAP TO EDIT")
     }
-    Box(
-        modifier = Modifier
-            .offset {
-                IntOffset(offsetX.roundToInt(), offsetY.roundToInt())
-            }
-            .pointerInput(Unit) {
-                detectDragGestures { change, dragAmount ->
-                    change.consume()
-                    offsetX += dragAmount.x
-                    offsetY += dragAmount.y
-                }
-            }
-            .background(Color.Transparent)
-            .border(shape = RoundedCornerShape(8.dp), color = Color.White, width = 1.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
-    ) {
 
+    Box(modifier = Modifier.offset {
+        IntOffset(offsetX.roundToInt(), offsetY.roundToInt())
+    }
+        .pointerInput(Unit) {
+            detectDragGestures { change, dragAmount ->
+                change.consume()
+                offsetX += dragAmount.x
+                offsetY += dragAmount.y
+            }
+        }
+        .background(Color.Transparent)
+        .border(shape = RoundedCornerShape(8.dp), color = Color.White, width = 1.dp)
+        .clip(RoundedCornerShape(16.dp))
+        .padding(16.dp),) {
+
+        Box(
+            modifier = Modifier
+        ) {
+
+            Box(
+                modifier = Modifier
+            ) {
+
+                Text(
+                    text = textValue.value,
+                    style = TextStyle(
+                        fontSize = 28.sp,
+                        color = Color.Black,
+                        drawStyle = Stroke(
+                            miter = 10f,
+                            width = 5f,
+                            join = StrokeJoin.Round
+                        )
+                    )
+                )
+            }
+        }
 
         Icon(
             painter = painterResource(resource = Res.drawable.cross),
@@ -123,23 +144,7 @@ private fun DraggableText() {
                 y = -(32).dp
             )
         )
-
-        Text(
-            text = textValue.value,
-            style = TextStyle(
-                fontSize = 28.sp,
-                color = Color.Black,
-                drawStyle = Stroke(
-                    miter = 10f,
-                    width = 5f,
-                    join = StrokeJoin.Round
-                )
-            )
-        )
-
-
     }
-
 }
 
 @Composable
