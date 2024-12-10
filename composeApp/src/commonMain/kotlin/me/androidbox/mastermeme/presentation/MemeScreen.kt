@@ -46,7 +46,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun MemeScreen(
     modifier: Modifier = Modifier,
-    onClickMemem: (memeRes: DrawableResource) -> Unit
+    onClickMeme: (memeRes: DrawableResource) -> Unit
 ) {
 
     val coroutineScope = rememberCoroutineScope()
