@@ -1,21 +1,14 @@
 package me.androidbox.mastermeme.presentation
 
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.draggable
-import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -24,7 +17,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,15 +30,13 @@ import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.drawText
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mastermeme.composeapp.generated.resources.Res
-import mastermeme.composeapp.generated.resources.cross
+import mastermeme.composeapp.generated.resources.close_text
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.vectorResource
 import kotlin.math.roundToInt
 
 @Composable
@@ -88,8 +78,6 @@ fun MemeEditScreen(
     )
 }
 
-
-
 @Composable
 private fun BoxScope.DraggableText() {
     var offsetX by remember { mutableStateOf(0f) }
@@ -98,24 +86,24 @@ private fun BoxScope.DraggableText() {
         mutableStateOf("DOUBLE TAP TO EDIT")
     }
 
-    Box(modifier = Modifier.offset {
-        IntOffset(offsetX.roundToInt(), offsetY.roundToInt())
-    }
-        .pointerInput(Unit) {
-            detectDragGestures { change, dragAmount ->
-                change.consume()
-                offsetX += dragAmount.x
-                offsetY += dragAmount.y
-            }
+    Box(
+        modifier = Modifier.offset {
+            IntOffset(offsetX.roundToInt(), offsetY.roundToInt())
         }
-        .background(Color.Transparent)
-        .border(shape = RoundedCornerShape(8.dp), color = Color.White, width = 1.dp)
-        .clip(RoundedCornerShape(16.dp))
-        .padding(16.dp),) {
+            .pointerInput(Unit) {
+                detectDragGestures { change, dragAmount ->
+                    change.consume()
+                    offsetX += dragAmount.x
+                    offsetY += dragAmount.y
+                }
+            }
+    ) {
 
-        Box(
-            modifier = Modifier
-        ) {
+        Box(modifier = Modifier
+            .background(Color.Transparent)
+            .border(shape = RoundedCornerShape(8.dp), color = Color.White, width = 1.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .padding(16.dp),) {
 
             Box(
                 modifier = Modifier
@@ -137,13 +125,15 @@ private fun BoxScope.DraggableText() {
         }
 
         Icon(
-            painter = painterResource(resource = Res.drawable.cross),
+            painter = painterResource(resource = Res.drawable.close_text),
             contentDescription = "close",
             modifier = Modifier.size(20.dp).align(Alignment.TopEnd).offset(
-                x = 16.dp,
-                y = -(32).dp
-            )
+                x = 8.dp,
+                y = -(8).dp
+            ),
+            tint = Color.Unspecified
         )
+
     }
 }
 
