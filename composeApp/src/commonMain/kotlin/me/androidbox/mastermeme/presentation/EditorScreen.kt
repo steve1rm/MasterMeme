@@ -2,6 +2,7 @@ package me.androidbox.mastermeme.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -21,6 +23,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,6 +40,11 @@ import org.jetbrains.compose.resources.painterResource
 fun EditorScreen(
     modifier: Modifier = Modifier
 ) {
+
+    val addMemeText = remember {
+        mutableStateOf("Add Meme Text")
+    }
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -73,12 +82,18 @@ fun EditorScreen(
                 modifier = Modifier.fillMaxSize().background(Color.Black),
                 verticalArrangement = Arrangement.Center
             ) {
-                Image(
-                    modifier = Modifier.padding(horizontal = 16.dp).size(380.dp),
-                    contentScale = ContentScale.Crop,
-                    painter = painterResource(resource = Res.drawable.p2is_38),
-                    contentDescription = "meme"
-                )
+                Box(modifier = Modifier.wrapContentSize(),
+                    contentAlignment = Alignment.Center) {
+
+                    Image(
+                        modifier = Modifier.padding(horizontal = 16.dp).size(380.dp),
+                        contentScale = ContentScale.Crop,
+                        painter = painterResource(resource = Res.drawable.p2is_38),
+                        contentDescription = "meme"
+                    )
+
+                    DraggableText()
+                }
             }
             Row(
                 modifier = Modifier.fillMaxWidth().height(70.dp).background(Color.LightGray)
@@ -93,7 +108,11 @@ fun EditorScreen(
                     Text("1")
                     Text("2")
                 }
-                Text(modifier = Modifier.width(111.dp), text = "Add Text", textAlign = TextAlign.Center)
+                Text(modifier = Modifier.width(111.dp).clickable(
+                    onClick = {
+
+                    }
+                ), text = "Add Text", textAlign = TextAlign.Center)
                 Text(modifier = Modifier.width(111.dp), text = "Save Meme",textAlign = TextAlign.Center)
             }
         }

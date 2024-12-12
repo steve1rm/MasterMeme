@@ -4,19 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,51 +28,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mastermeme.composeapp.generated.resources.Res
 import mastermeme.composeapp.generated.resources.close_text
-import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import kotlin.math.roundToInt
 
-@Composable
-fun MemeEditScreen(
-    modifier: Modifier = Modifier,
-    imageRes: DrawableResource
-) {
-    Scaffold(
-        modifier = modifier,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "New meme")
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {}) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "edit your image"
-                        )
-                    }
-                }
-            )
-        },
-        content = { paddingValues ->
-            Box(
-                modifier = Modifier.fillMaxSize().background(color = Color.DarkGray),
-                contentAlignment = Alignment.Center
-            ) {
-                /*Image(
-                    painter = painterResource(resource = imageRes),
-                    contentDescription = "meme editor"
-                )*/
-
-                DraggableText()
-            }
-        }
-    )
-}
 
 @Composable
-private fun BoxScope.DraggableText() {
+fun DraggableText() {
     var offsetX by remember { mutableStateOf(0f) }
     var offsetY by remember { mutableStateOf(0f) }
     val textValue = remember {
@@ -136,12 +90,6 @@ private fun BoxScope.DraggableText() {
 
     }
 }
-
-@Composable
-fun MemeText() {
-
-}
-
 
 
 
