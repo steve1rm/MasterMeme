@@ -23,8 +23,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,6 +45,10 @@ fun EditorScreen(
 
     val addMemeText = remember {
         mutableStateOf("Add Meme Text")
+    }
+
+    var shouldShowDialog by remember {
+        mutableStateOf(false)
     }
 
     Scaffold(
@@ -98,10 +104,12 @@ fun EditorScreen(
                         },
                         onDoubleClickText = { text ->
                             println(text)
+                            shouldShowDialog = true
                         }
                     )
                 }
             }
+
             Row(
                 modifier = Modifier.fillMaxWidth().height(70.dp).background(Color.LightGray)
                     .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -121,6 +129,16 @@ fun EditorScreen(
                     }
                 ), text = "Add Text", textAlign = TextAlign.Center)
                 Text(modifier = Modifier.width(111.dp), text = "Save Meme",textAlign = TextAlign.Center)
+            }
+
+            if(shouldShowDialog) {
+                EditMemeDialog(
+                    title = "Text",
+                    description = "Double Tap to Edit",
+                    onDismiss = {
+
+                    },
+                )
             }
         }
     }
