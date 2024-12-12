@@ -2,7 +2,9 @@ package me.androidbox.mastermeme.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -33,10 +35,13 @@ import kotlin.math.roundToInt
 
 
 @Composable
-fun DraggableText() {
+fun DraggableText(
+    onClickClose: () -> Unit,
+    onDoubleClickText: (text: String) -> Unit
+) {
     var offsetX by remember { mutableStateOf(0f) }
     var offsetY by remember { mutableStateOf(0f) }
-    val textValue = remember {
+    val textValue by remember {
         mutableStateOf("DOUBLE TAP TO EDIT")
     }
 
@@ -64,7 +69,14 @@ fun DraggableText() {
             ) {
 
                 Text(
-                    text = textValue.value,
+                    modifier = Modifier.pointerInput(Unit) {
+                        this.detectTapGestures(
+                            onDoubleTap = {
+                                onDoubleClickText(textValue)
+                            }
+                        )
+                    },
+                    text = textValue,
                     style = TextStyle(
                         fontSize = 28.sp,
                         color = Color.Black,
@@ -81,13 +93,15 @@ fun DraggableText() {
         Icon(
             painter = painterResource(resource = Res.drawable.close_text),
             contentDescription = "close",
-            modifier = Modifier.size(20.dp).align(Alignment.TopEnd).offset(
-                x = 8.dp,
-                y = -(8).dp
-            ),
+            modifier = Modifier
+                .size(20.dp)
+                .align(Alignment.TopEnd)
+                .offset(
+                    x = 8.dp,
+                    y = -(8).dp)
+                .clickable(onClick = onClickClose),
             tint = Color.Unspecified
         )
-
     }
 }
 

@@ -92,7 +92,14 @@ fun EditorScreen(
                         contentDescription = "meme"
                     )
 
-                    DraggableText()
+                    DraggableText(
+                        onClickClose = {
+                            println("Close")
+                        },
+                        onDoubleClickText = { text ->
+                            println(text)
+                        }
+                    )
                 }
             }
             Row(
