@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import me.androidbox.mastermeme.presentation.EditMemeDialog
 
 class MainActivity : ComponentActivity() {
@@ -24,8 +25,9 @@ fun PreviewEditMemeDialog() {
     EditMemeDialog(
         title = "Text",
         onDismiss = {},
-        description = "Double Tap to Edit",
         modifier = Modifier,
+        memeText = LoremIpsum(3).toString(),
+        memeTextChanged = {},
     )
 }
 

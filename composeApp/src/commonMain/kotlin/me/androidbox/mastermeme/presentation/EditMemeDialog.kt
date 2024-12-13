@@ -4,18 +4,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.contentColorFor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,8 +33,13 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun EditMemeDialog(
     modifier: Modifier = Modifier,
     title: String,
-    onDismiss: () -> Unit,
-    description: String) {
+    memeText: String,
+    memeTextChanged: (text: String) -> Unit,
+    onDismiss: () -> Unit) {
+
+    var memeTextValue by remember {
+        mutableStateOf(memeText)
+    }
 
     Dialog(onDismissRequest = onDismiss,
         properties = DialogProperties()
@@ -54,10 +60,10 @@ fun EditMemeDialog(
                 color = MaterialTheme.colorScheme.onSurface)
 
             TextField(
-                value = description,
+                value = memeTextValue,
                 singleLine = true,
-                onValueChange = {
-
+                onValueChange = { newMemeValue ->
+                    memeTextValue = newMemeValue
                 },
                 textStyle = TextStyle(
                     fontSize = 16.sp
@@ -75,7 +81,7 @@ fun EditMemeDialog(
             ) {
                 TextButton(
                     onClick = {
-
+                        onDismiss()
                     }
                 ) {
                     Text(text = "Cancel")
@@ -83,7 +89,8 @@ fun EditMemeDialog(
 
                 TextButton(
                     onClick = {
-
+                        memeTextChanged(memeTextValue)
+                        onDismiss()
                     }
                 ) {
                     Text(text = "OK")
@@ -100,7 +107,8 @@ fun PreviewEditMemeDialog() {
         EditMemeDialog(
             title = "Text",
             onDismiss = {},
-            description = "Double Tap to Edit",
             modifier = Modifier,
+            memeText = "Double Tap to Edit",
+            memeTextChanged = {},
         )
 }

@@ -43,8 +43,8 @@ fun EditorScreen(
     modifier: Modifier = Modifier
 ) {
 
-    val addMemeText = remember {
-        mutableStateOf("Add Meme Text")
+    var addMemeText by remember {
+        mutableStateOf("DOUBLE TAP TO EDIT")
     }
 
     var shouldShowDialog by remember {
@@ -99,6 +99,7 @@ fun EditorScreen(
                     )
 
                     DraggableText(
+                        memeText = addMemeText,
                         onClickClose = {
                             println("Close")
                         },
@@ -134,9 +135,13 @@ fun EditorScreen(
             if(shouldShowDialog) {
                 EditMemeDialog(
                     title = "Text",
-                    description = "Double Tap to Edit",
+                    memeText = addMemeText,
                     onDismiss = {
-
+                        shouldShowDialog = false
+                    },
+                    memeTextChanged = { newMemeText ->
+                        println(newMemeText)
+                        addMemeText = newMemeText
                     },
                 )
             }

@@ -36,14 +36,15 @@ import kotlin.math.roundToInt
 
 @Composable
 fun DraggableText(
+    memeText: String,
     onClickClose: () -> Unit,
     onDoubleClickText: (text: String) -> Unit
 ) {
     var offsetX by remember { mutableStateOf(0f) }
     var offsetY by remember { mutableStateOf(0f) }
-    val textValue by remember {
-        mutableStateOf("DOUBLE TAP TO EDIT")
-    }
+   /* val textValue by remember {
+        mutableStateOf(memeText)
+    }*/
 
     Box(
         modifier = Modifier.offset {
@@ -72,11 +73,11 @@ fun DraggableText(
                     modifier = Modifier.pointerInput(Unit) {
                         this.detectTapGestures(
                             onDoubleTap = {
-                                onDoubleClickText(textValue)
+                                onDoubleClickText(memeText)
                             }
                         )
                     },
-                    text = textValue,
+                    text = memeText,
                     style = TextStyle(
                         fontSize = 28.sp,
                         color = Color.Black,
