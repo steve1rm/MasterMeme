@@ -112,7 +112,8 @@ fun EditorScreen(
                         DraggableText(
                             textMemeData = data,
                             onClickClose = {
-                                println("Close")
+                                println("onclickClose $index ${listOfMemeText[index].text.value} ${listOfMemeText[index].x.value} ${listOfMemeText[index].y.value}")
+                                listOfMemeText.removeAt(index)
                             },
                             onDoubleClickText = { text ->
                                 println("$text $index")
@@ -120,7 +121,7 @@ fun EditorScreen(
                                 shouldShowDialog = true
                             },
                             updateCoordinates = { x, y ->
-                                println("EDITORSCREEN X $x Y $y")
+                                println("update coordinates index $index X $x Y $y")
                                 listOfMemeText[index].x.value = x
                                 listOfMemeText[index].y.value = y
                             }
