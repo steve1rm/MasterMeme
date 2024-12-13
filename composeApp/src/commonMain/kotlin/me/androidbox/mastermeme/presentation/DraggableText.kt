@@ -68,11 +68,11 @@ fun DraggableText(
                     modifier = Modifier.pointerInput(Unit) {
                         this.detectTapGestures(
                             onDoubleTap = {
-                                onDoubleClickText(textMemeData.text)
+                                onDoubleClickText(textMemeData.text.value)
                             }
                         )
                     },
-                    text = textMemeData.text,
+                    text = textMemeData.text.value,
                     style = TextStyle(
                         fontSize = 28.sp,
                         color = Color.Black,

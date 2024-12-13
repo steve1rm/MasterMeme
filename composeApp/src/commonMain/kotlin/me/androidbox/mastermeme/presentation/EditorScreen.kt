@@ -24,6 +24,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,9 +45,9 @@ fun EditorScreen(
     modifier: Modifier = Modifier
 ) {
 
-    var addMemeText by remember {
+  /*  var addMemeText by remember {
         mutableStateOf("DOUBLE TAP TO EDIT")
-    }
+    }*/
 
     var shouldShowDialog by remember {
         mutableStateOf(false)
@@ -54,6 +55,10 @@ fun EditorScreen(
 
     val listOfMemeText = remember {
         mutableStateListOf<TextMemeData>()
+    }
+
+    var memeIndex by remember {
+        mutableIntStateOf(0)
     }
 
     Scaffold(
@@ -110,7 +115,8 @@ fun EditorScreen(
                                 println("Close")
                             },
                             onDoubleClickText = { text ->
-                                println(text)
+                                println("$text $index")
+                                memeIndex = index
                                 shouldShowDialog = true
                             },
                             updateCoordinates = { x, y ->
@@ -154,13 +160,14 @@ fun EditorScreen(
             if(shouldShowDialog) {
                 EditMemeDialog(
                     title = "Text",
-                    memeText = addMemeText,
+                    memeText = listOfMemeText[memeIndex].text.value,
                     onDismiss = {
                         shouldShowDialog = false
                     },
                     memeTextChanged = { newMemeText ->
                         println(newMemeText)
-                        addMemeText = newMemeText
+//                        addMemeText = newMemeText
+                        listOfMemeText[memeIndex].text.value = newMemeText
                     },
                 )
             }
