@@ -13,10 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,25 +32,24 @@ import kotlin.math.roundToInt
 
 @Composable
 fun DraggableText(
-    memeText: String,
+    textMemeData: TextMemeData,
+    updateCoordinates: (x: Float, y: Float) -> Unit,
     onClickClose: () -> Unit,
     onDoubleClickText: (text: String) -> Unit
 ) {
-    var offsetX by remember { mutableStateOf(0f) }
-    var offsetY by remember { mutableStateOf(0f) }
-   /* val textValue by remember {
-        mutableStateOf(memeText)
-    }*/
 
     Box(
         modifier = Modifier.offset {
-            IntOffset(offsetX.roundToInt(), offsetY.roundToInt())
+            IntOffset(textMemeData.x.value.roundToInt(), textMemeData.y.value.roundToInt())
         }
             .pointerInput(Unit) {
                 detectDragGestures { change, dragAmount ->
                     change.consume()
-                    offsetX += dragAmount.x
-                    offsetY += dragAmount.y
+
+                    updateCoordinates(
+                        textMemeData.x.value + dragAmount.x,
+                        textMemeData.y.value + dragAmount.y
+                    )
                 }
             }
     ) {
@@ -73,11 +68,11 @@ fun DraggableText(
                     modifier = Modifier.pointerInput(Unit) {
                         this.detectTapGestures(
                             onDoubleTap = {
-                                onDoubleClickText(memeText)
+                                onDoubleClickText(textMemeData.text)
                             }
                         )
                     },
-                    text = memeText,
+                    text = textMemeData.text,
                     style = TextStyle(
                         fontSize = 28.sp,
                         color = Color.Black,

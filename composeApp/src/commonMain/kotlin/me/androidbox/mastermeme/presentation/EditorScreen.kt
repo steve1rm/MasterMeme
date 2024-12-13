@@ -24,6 +24,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -49,6 +50,10 @@ fun EditorScreen(
 
     var shouldShowDialog by remember {
         mutableStateOf(false)
+    }
+
+    val listOfMemeText = remember {
+        mutableStateListOf<TextMemeData>()
     }
 
     Scaffold(
@@ -98,16 +103,23 @@ fun EditorScreen(
                         contentDescription = "meme"
                     )
 
-                    DraggableText(
-                        memeText = addMemeText,
-                        onClickClose = {
-                            println("Close")
-                        },
-                        onDoubleClickText = { text ->
-                            println(text)
-                            shouldShowDialog = true
-                        }
-                    )
+                    listOfMemeText.forEachIndexed { index, data ->
+                        DraggableText(
+                            textMemeData = data,
+                            onClickClose = {
+                                println("Close")
+                            },
+                            onDoubleClickText = { text ->
+                                println(text)
+                                shouldShowDialog = true
+                            },
+                            updateCoordinates = { x, y ->
+                                println("EDITORSCREEN X $x Y $y")
+                                listOfMemeText[index].x.value = x
+                                listOfMemeText[index].y.value = y
+                            }
+                        )
+                    }
                 }
             }
 
@@ -124,12 +136,19 @@ fun EditorScreen(
                     Text("1")
                     Text("2")
                 }
+
                 Text(modifier = Modifier.width(111.dp).clickable(
                     onClick = {
-
+                        listOfMemeText.add(TextMemeData(
+                            isEditState = false))
                     }
-                ), text = "Add Text", textAlign = TextAlign.Center)
-                Text(modifier = Modifier.width(111.dp), text = "Save Meme",textAlign = TextAlign.Center)
+                ),
+                    text = "Add Text", textAlign = TextAlign.Center)
+
+                Text(
+                    modifier = Modifier
+                        .width(111.dp),
+                    text = "Save Meme",textAlign = TextAlign.Center)
             }
 
             if(shouldShowDialog) {
