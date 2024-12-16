@@ -3,6 +3,7 @@ package me.androidbox.mastermeme.presentation
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.DraggableState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,17 +15,26 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.SliderState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -34,8 +44,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import mastermeme.composeapp.generated.resources.Res
 import mastermeme.composeapp.generated.resources.p2is_38
 import org.jetbrains.compose.resources.painterResource
@@ -56,6 +69,12 @@ fun EditorScreen(
     var memeIndex by remember {
         mutableIntStateOf(0)
     }
+
+    var isEditMode by remember {
+        mutableStateOf(false)
+    }
+
+    var sliderPosition by remember { mutableFloatStateOf(0f) }
 
     Scaffold(
         modifier = modifier,
@@ -104,7 +123,6 @@ fun EditorScreen(
                         contentDescription = "meme"
                     )
 
-
                     listOfMemeText.forEachIndexed { index, data ->
                         key(data.id) {
                             DraggableText(
@@ -117,6 +135,9 @@ fun EditorScreen(
                                     if(textIndex != -1) {
                                         listOfMemeText.removeAt(textIndex)
                                     }
+                                },
+                                onSingleClick = {
+                                    isEditMode = true
                                 },
                                 onDoubleClickText = { text ->
                                     println("$text $index")
@@ -143,29 +164,99 @@ fun EditorScreen(
             Row(
                 modifier = Modifier.fillMaxWidth().height(70.dp).background(Color.LightGray)
                     .padding(horizontal = 16.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier.width(111.dp),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                ) {
-                    Text("1")
-                    Text("2")
-                }
+                if(isEditMode) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        // Left Icon
+                        Icon(
 
-                Text(modifier = Modifier.width(111.dp).clickable(
-                    onClick = {
-                        listOfMemeText.add(TextMemeData(
-                            isEditState = false))
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Close",
+                            tint = Color(0xFFB0A4C0), // Light purple tint
+                            modifier = Modifier.size(24.dp).clickable(
+                                onClick = {
+                                    isEditMode = false
+                                }
+                            )
+                        )
+
+                        // Left Label
+                        Text(
+                            text = "Aa",
+                            style = TextStyle(fontSize = 12.sp, color = Color(0xFFB0A4C0)),
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+
+                        // Slider
+                        Slider(
+                            value = sliderPosition,
+                            onValueChange = { value: Float ->
+                                sliderPosition = value
+                            },
+                            valueRange = 0f..1f,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 8.dp),
+                            colors = SliderDefaults.colors(
+                                thumbColor = Color(0xFFB0A4C0), // Thumb color
+                                activeTrackColor = Color(0xFFB0A4C0), // Track color
+                                inactiveTrackColor = Color(0xFF8A7A98) // Lighter inactive track
+                            )
+                        )
+
+                        // Right Label
+                        Text(
+                            text = "Aa",
+                            style = TextStyle(fontSize = 18.sp, color = Color.White),
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
+
+                        // Check Icon
+                        Icon(
+
+                            imageVector = Icons.Default.Check,
+                            contentDescription = "Check",
+                            tint = Color(0xFFB0A4C0), // Light purple tint
+                            modifier = Modifier.size(24.dp).clickable(
+                                onClick = {
+                                    isEditMode = false
+                                }
+                            )
+                        )
                     }
-                ),
-                    text = "Add Text", textAlign = TextAlign.Center)
+                }
+                else {
+                    Row(
+                        modifier = Modifier.width(111.dp),
+                        horizontalArrangement = Arrangement.SpaceAround,
+                    ) {
+                        Text("1")
+                        Text("2")
+                    }
 
-                Text(
-                    modifier = Modifier
-                        .width(111.dp),
-                    text = "Save Meme",textAlign = TextAlign.Center)
+                    Text(
+                        modifier = Modifier.width(111.dp).clickable(
+                            onClick = {
+                                listOfMemeText.add(
+                                    TextMemeData(
+                                        isEditState = false
+                                    )
+                                )
+                            }
+                        ),
+                        text = "Add Text", textAlign = TextAlign.Center)
+
+                    Text(
+                        modifier = Modifier
+                            .width(111.dp),
+                        text = "Save Meme", textAlign = TextAlign.Center
+                    )
+                }
             }
 
             if(shouldShowDialog) {

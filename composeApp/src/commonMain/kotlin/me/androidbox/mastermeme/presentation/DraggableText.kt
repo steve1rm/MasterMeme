@@ -35,7 +35,8 @@ fun DraggableText(
     textMemeData: TextMemeData,
     updateCoordinates: (x: Float, y: Float) -> Unit,
     onClickClose: () -> Unit,
-    onDoubleClickText: (text: String) -> Unit
+    onDoubleClickText: (text: String) -> Unit,
+    onSingleClick: () -> Unit
 ) {
 
     Box(
@@ -69,6 +70,9 @@ fun DraggableText(
                         this.detectTapGestures(
                             onDoubleTap = {
                                 onDoubleClickText(textMemeData.text.value)
+                            },
+                            onTap = {
+                                onSingleClick()
                             }
                         )
                     },
