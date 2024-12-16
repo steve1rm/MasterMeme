@@ -24,6 +24,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -44,11 +45,6 @@ import org.jetbrains.compose.resources.painterResource
 fun EditorScreen(
     modifier: Modifier = Modifier
 ) {
-
-  /*  var addMemeText by remember {
-        mutableStateOf("DOUBLE TAP TO EDIT")
-    }*/
-
     var shouldShowDialog by remember {
         mutableStateOf(false)
     }
@@ -108,24 +104,38 @@ fun EditorScreen(
                         contentDescription = "meme"
                     )
 
+
                     listOfMemeText.forEachIndexed { index, data ->
-                        DraggableText(
-                            textMemeData = data,
-                            onClickClose = {
-                                println("onclickClose $index ${listOfMemeText[index].text.value} ${listOfMemeText[index].x.value} ${listOfMemeText[index].y.value}")
-                                listOfMemeText.removeAt(index)
-                            },
-                            onDoubleClickText = { text ->
-                                println("$text $index")
-                                memeIndex = index
-                                shouldShowDialog = true
-                            },
-                            updateCoordinates = { x, y ->
-                                println("update coordinates index $index X $x Y $y")
-                                listOfMemeText[index].x.value = x
-                                listOfMemeText[index].y.value = y
-                            }
-                        )
+                        key(data.id) {
+                            DraggableText(
+                                textMemeData = data,
+                                onClickClose = {
+                                    println("onclickClose $index ${listOfMemeText[index].text.value} ${listOfMemeText[index].x.value} ${listOfMemeText[index].y.value}")
+                                    val textIndex = listOfMemeText.indexOfFirst {
+                                        it.id == data.id
+                                    }
+                                    if(textIndex != -1) {
+                                        listOfMemeText.removeAt(textIndex)
+                                    }
+                                },
+                                onDoubleClickText = { text ->
+                                    println("$text $index")
+                                    memeIndex = index
+                                    shouldShowDialog = true
+                                },
+                                updateCoordinates = { x, y ->
+                                    println("update coordinates index $index X $x Y $y")
+                                    val textIndex = listOfMemeText.indexOfFirst {
+                                        it.id == data.id
+                                    }
+
+                                    if(textIndex != -1) {
+                                        listOfMemeText[textIndex].x.value = x
+                                        listOfMemeText[textIndex].y.value = y
+                                    }
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -167,7 +177,6 @@ fun EditorScreen(
                     },
                     memeTextChanged = { newMemeText ->
                         println(newMemeText)
-//                        addMemeText = newMemeText
                         listOfMemeText[memeIndex].text.value = newMemeText
                     },
                 )
