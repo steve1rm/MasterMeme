@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -162,72 +163,66 @@ fun EditorScreen(
             }
 
             Row(
-                modifier = Modifier.fillMaxWidth().height(70.dp).background(Color.LightGray)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(70.dp)
+                    .background(Color.LightGray)
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if(isEditMode) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Left Icon
-                        Icon(
-
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "Close",
-                            tint = Color(0xFFB0A4C0), // Light purple tint
-                            modifier = Modifier.size(24.dp).clickable(
-                                onClick = {
-                                    isEditMode = false
-                                }
+                        IconButton(
+                            onClick = {
+                                isEditMode = false
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "close edit",
+                                tint = Color.DarkGray
                             )
-                        )
+                        }
 
-                        // Left Label
                         Text(
                             text = "Aa",
-                            style = TextStyle(fontSize = 12.sp, color = Color(0xFFB0A4C0)),
-                            modifier = Modifier.padding(start = 8.dp)
+                            fontSize = 12.sp
                         )
 
-                        // Slider
                         Slider(
+                            modifier = Modifier.weight(1f),
                             value = sliderPosition,
                             onValueChange = { value: Float ->
                                 sliderPosition = value
                             },
-                            valueRange = 0f..1f,
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(horizontal = 8.dp),
                             colors = SliderDefaults.colors(
-                                thumbColor = Color(0xFFB0A4C0), // Thumb color
-                                activeTrackColor = Color(0xFFB0A4C0), // Track color
-                                inactiveTrackColor = Color(0xFF8A7A98) // Lighter inactive track
-                            )
-                        )
+                                thumbColor = MaterialTheme.colorScheme.secondary,
+                                activeTrackColor = MaterialTheme.colorScheme.secondary,
+                                inactiveTrackColor = MaterialTheme.colorScheme.secondaryContainer,
+                            ),
+                            steps = 6,
+                            valueRange = 12f..24f)
 
-                        // Right Label
                         Text(
                             text = "Aa",
-                            style = TextStyle(fontSize = 18.sp, color = Color.White),
-                            modifier = Modifier.padding(end = 8.dp)
+                            fontSize = 24.sp
                         )
 
-                        // Check Icon
-                        Icon(
-
-                            imageVector = Icons.Default.Check,
-                            contentDescription = "Check",
-                            tint = Color(0xFFB0A4C0), // Light purple tint
-                            modifier = Modifier.size(24.dp).clickable(
-                                onClick = {
-                                    isEditMode = false
-                                }
+                        IconButton(
+                            onClick = {
+                                isEditMode = false
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Check,
+                                contentDescription = "accept edit",
+                                tint = Color.Green
                             )
-                        )
+                        }
                     }
                 }
                 else {
