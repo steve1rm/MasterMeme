@@ -75,7 +75,7 @@ fun EditorScreen(
         mutableStateOf(false)
     }
 
-    var sliderPosition by remember { mutableFloatStateOf(0f) }
+    var sliderPosition by remember { mutableFloatStateOf(16f) }
 
     Scaffold(
         modifier = modifier,
@@ -137,8 +137,9 @@ fun EditorScreen(
                                         listOfMemeText.removeAt(textIndex)
                                     }
                                 },
-                                onSingleClick = {
+                                onSingleClick = { fontSize ->
                                     isEditMode = true
+                                    sliderPosition = fontSize.value
                                 },
                                 onDoubleClickText = { text ->
                                     println("$text $index")
@@ -195,8 +196,9 @@ fun EditorScreen(
 
                         Slider(
                             modifier = Modifier.weight(1f),
-                            value = sliderPosition,
+                            value = listOfMemeText[memeIndex].fontSize.value.value,
                             onValueChange = { value: Float ->
+                                listOfMemeText[memeIndex].fontSize.value = value.sp
                                 sliderPosition = value
                             },
                             colors = SliderDefaults.colors(

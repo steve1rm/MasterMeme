@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mastermeme.composeapp.generated.resources.Res
@@ -36,7 +37,7 @@ fun DraggableText(
     updateCoordinates: (x: Float, y: Float) -> Unit,
     onClickClose: () -> Unit,
     onDoubleClickText: (text: String) -> Unit,
-    onSingleClick: () -> Unit
+    onSingleClick: (fontSize: TextUnit) -> Unit
 ) {
 
     Box(
@@ -72,13 +73,14 @@ fun DraggableText(
                                 onDoubleClickText(textMemeData.text.value)
                             },
                             onTap = {
-                                onSingleClick()
+                                onSingleClick(textMemeData.fontSize.value)
                             }
                         )
                     },
                     text = textMemeData.text.value,
+                    fontSize = textMemeData.fontSize.value,
                     style = TextStyle(
-                        fontSize = 28.sp,
+                        fontSize = textMemeData.fontSize.value,
                         color = Color.Black,
                         drawStyle = Stroke(
                             miter = 10f,
