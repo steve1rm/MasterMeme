@@ -21,6 +21,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,10 +37,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import me.androidbox.mastermeme.presentation.TextMemeData
 
 @Composable
 fun EditorMenu(
     modifier: Modifier = Modifier,
+    textMemeData: TextMemeData,
     onClose: () -> Unit,
     onSliderPositionChange: (Float) -> Unit,
     onCheck: () -> Unit
@@ -75,7 +79,8 @@ fun EditorMenu(
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 8.dp),
-                onSliderPositionChange = {onSliderPositionChange.invoke(it)},
+                currentValue = textMemeData.fontSize.value.value,
+                onSliderPositionChange = { onSliderPositionChange.invoke(it) },
                 valueRange = 12f..40f
             )
 
@@ -105,7 +110,8 @@ fun EditorMenu(
 @Composable
 fun ManualSlider(
     modifier: Modifier = Modifier,
-    onSliderPositionChange : (Float) -> Unit,
+    currentValue: Float,
+    onSliderPositionChange: (Float) -> Unit,
     valueRange: ClosedFloatingPointRange<Float>
 ) {
     var sliderPosition by remember { mutableStateOf(0f) } // Slider value: 0f to 1f
@@ -113,6 +119,12 @@ fun ManualSlider(
     val trackHeight = 1.dp // Thickness of the slider line
     val minValue = valueRange.start
     val maxValue = valueRange.endInclusive
+
+    LaunchedEffect(Unit) {
+        println("$currentValue, $maxValue $minValue")
+        sliderPosition = (currentValue - minValue) / (maxValue - minValue)
+        println(sliderPosition)
+    }
 
     BoxWithConstraints(
         modifier = modifier
@@ -158,7 +170,8 @@ fun ManualSlider(
                         // Detect Drag Gesture
                         detectDragGestures { change, dragAmount ->
                             change.consume()
-                            sliderPosition = (sliderPosition + dragAmount.x / trackWidth).coerceIn(0f, 1f)
+                            sliderPosition =
+                                (sliderPosition + dragAmount.x / trackWidth).coerceIn(0f, 1f)
                             val resultValue = minValue + (sliderPosition * (maxValue - minValue))
                             onSliderPositionChange.invoke(resultValue)
                         }

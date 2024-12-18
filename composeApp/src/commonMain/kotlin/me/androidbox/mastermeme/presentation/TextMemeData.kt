@@ -14,6 +14,6 @@ data class TextMemeData(
     val x: MutableFloatState = mutableFloatStateOf(0.0f),
     val y: MutableFloatState = mutableFloatStateOf(0.0f),
     val isEditState: Boolean,
-    var fontSize: MutableState<TextUnit> = mutableStateOf(40.sp)
+    var fontSize: MutableState<TextUnit> = mutableStateOf(28.sp)
 )
 
