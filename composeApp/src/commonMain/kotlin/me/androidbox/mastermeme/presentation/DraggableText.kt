@@ -11,22 +11,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import mastermeme.composeapp.generated.resources.Res
 import mastermeme.composeapp.generated.resources.close_text
+import me.androidbox.mastermeme.presentation.component.StrokeAndFillText
 import org.jetbrains.compose.resources.painterResource
 import kotlin.math.roundToInt
 
@@ -56,17 +51,16 @@ fun DraggableText(
             }
     ) {
 
-        Box(modifier = Modifier
-            .background(Color.Transparent)
-            .border(shape = RoundedCornerShape(8.dp), color = Color.White, width = 1.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .padding(16.dp),) {
-
+        Box(
+            modifier = Modifier
+                .background(Color.Transparent)
+                .border(shape = RoundedCornerShape(4.dp), color = Color.White, width = 1.dp)
+                .padding(vertical = 14.dp, horizontal = 12.dp)
+        ) {
             Box(
                 modifier = Modifier
             ) {
-
-                Text(
+                StrokeAndFillText(
                     modifier = Modifier.pointerInput(Unit) {
                         this.detectTapGestures(
                             onDoubleTap = {
@@ -78,17 +72,31 @@ fun DraggableText(
                         )
                     },
                     text = textMemeData.text.value,
+                    strokeColor = Color.Black,
+                    fillColor = Color.White,
                     fontSize = textMemeData.fontSize.value,
-                    style = TextStyle(
-                        fontSize = textMemeData.fontSize.value,
-                        color = Color.Black,
-                        drawStyle = Stroke(
-                            miter = 10f,
-                            width = 5f,
-                            join = StrokeJoin.Round
-                        )
-                    )
+                    strokeWidth = 2f
                 )
+//                Text(
+//                    modifier = Modifier.pointerInput(Unit) {
+//                        this.detectTapGestures(
+//                            onDoubleTap = {
+//                                onDoubleClickText(textMemeData.text.value)
+//                            },
+//                            onTap = {
+//                                onSingleClick(textMemeData.fontSize.value)
+//                            }
+//                        )
+//                    },
+//                    text = textMemeData.text.value,
+//                    style = TextStyle(
+//                        fontSize = textMemeData.fontSize.value,
+//                        color = Color.Black,
+//                        drawStyle = Stroke(
+//                            width = 2f,
+//                        )
+//                    )
+//                )
             }
         }
 
@@ -100,7 +108,8 @@ fun DraggableText(
                 .align(Alignment.TopEnd)
                 .offset(
                     x = 8.dp,
-                    y = -(8).dp)
+                    y = -(8).dp
+                )
                 .clickable(onClick = onClickClose),
             tint = Color.Unspecified
         )
