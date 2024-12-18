@@ -76,7 +76,7 @@ fun EditorMenu(
                     .weight(1f)
                     .padding(horizontal = 8.dp),
                 onSliderPositionChange = {onSliderPositionChange.invoke(it)},
-                valueRange = 12f..24f
+                valueRange = 12f..40f
             )
 
             // Right Label

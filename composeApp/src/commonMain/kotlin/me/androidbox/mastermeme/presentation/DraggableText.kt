@@ -77,26 +77,6 @@ fun DraggableText(
                     fontSize = textMemeData.fontSize.value,
                     strokeWidth = 2f
                 )
-//                Text(
-//                    modifier = Modifier.pointerInput(Unit) {
-//                        this.detectTapGestures(
-//                            onDoubleTap = {
-//                                onDoubleClickText(textMemeData.text.value)
-//                            },
-//                            onTap = {
-//                                onSingleClick(textMemeData.fontSize.value)
-//                            }
-//                        )
-//                    },
-//                    text = textMemeData.text.value,
-//                    style = TextStyle(
-//                        fontSize = textMemeData.fontSize.value,
-//                        color = Color.Black,
-//                        drawStyle = Stroke(
-//                            width = 2f,
-//                        )
-//                    )
-//                )
             }
         }
 

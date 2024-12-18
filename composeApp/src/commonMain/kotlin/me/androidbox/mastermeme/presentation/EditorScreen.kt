@@ -131,10 +131,10 @@ fun EditorScreen(
                                 },
                                 onSingleClick = { fontSize ->
                                     isEditMode = true
+                                    memeIndex = index
                                     sliderPosition = fontSize.value
                                 },
                                 onDoubleClickText = { text ->
-                                    println("$text $index")
                                     memeIndex = index
                                     shouldShowDialog = true
                                 },
