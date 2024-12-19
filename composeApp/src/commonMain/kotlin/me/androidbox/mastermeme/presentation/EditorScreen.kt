@@ -163,7 +163,10 @@ fun EditorScreen(
                     EditorMenu(
                         modifier = Modifier.fillMaxWidth(),
                         textMemeData = listOfMemeText[memeIndex],
-                        onClose = { isEditMode = false },
+                        onClose = { value ->
+                            listOfMemeText[memeIndex].fontSize.value = value.sp
+                            isEditMode = false
+                        },
                         onSliderPositionChange = { value ->
                             listOfMemeText[memeIndex].fontSize.value = value.sp
                             sliderPosition = value
