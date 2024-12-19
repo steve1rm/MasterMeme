@@ -1,170 +1,109 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package me.androidbox.mastermeme.presentation
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomSheetScaffold
-import androidx.compose.material.BottomSheetValue
-import androidx.compose.material.FabPosition
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.rememberBottomSheetScaffoldState
-import androidx.compose.material.rememberBottomSheetState
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.launch
-import mastermeme.composeapp.generated.resources.Res
-import mastermeme.composeapp.generated.resources.ajtl_46
-import mastermeme.composeapp.generated.resources.eyvu_45
-import mastermeme.composeapp.generated.resources.left_exit_12_off_ramp_3
-import mastermeme.composeapp.generated.resources.meme_man
-import mastermeme.composeapp.generated.resources.p2is_38
-import mastermeme.composeapp.generated.resources.rcrc1_39
-import mastermeme.composeapp.generated.resources.t8r9a_26
+import me.androidbox.mastermeme.data.MemeTemplates
+import me.androidbox.mastermeme.presentation.component.EmptyMemeView
+import me.androidbox.mastermeme.presentation.component.MemeListView
+import me.androidbox.mastermeme.presentation.component.TemplateMemeBottomSheet
 import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.painterResource
+
+const val ON_PRIMARY_FIXED_COLOR = 0xFF21005D
+const val SURFACE_CONTAINER_LOWEST_COLOR = 0xFF0F0D13
+const val OUTLINE_COLOR = 0xFF79747E
+const val LIGHT_GRAY_C0LOR = 0xFFE6E0E9
+const val SCRIM_COLOR = 0xB20F0D13
 
 @Composable
 fun MemeScreen(
     modifier: Modifier = Modifier,
     onClickMeme: (memeRes: DrawableResource) -> Unit
 ) {
-
-    val coroutineScope = rememberCoroutineScope()
-
-    val bottomSheetState = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberBottomSheetState(
-            initialValue = BottomSheetValue.Collapsed,
-            confirmStateChange = { bottomSheetValue ->
-                when(bottomSheetValue) {
-                    BottomSheetValue.Collapsed -> {
-                        println("Collapsed")
-                    }
-                    BottomSheetValue.Expanded -> {
-                        println("Expanded")
-                    }
+    Scaffold(
+        containerColor = Color(SURFACE_CONTAINER_LOWEST_COLOR),
+        modifier = modifier.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                colors = TopAppBarColors(
+                    containerColor = Color(SURFACE_CONTAINER_LOW_COLOR),
+                    scrolledContainerColor = Color(SURFACE_CONTAINER_LOW_COLOR),
+                    navigationIconContentColor = Color.White,
+                    titleContentColor = Color.White,
+                    actionIconContentColor = Color.White
+                ),
+                title = {
+                    androidx.compose.material3.Text("Your memes")
                 }
+            )
+        }
+    ) { innerPadding ->
 
-                true
-            }
-        )
-    )
+        var showBottomSheet by remember { mutableStateOf(false) }
 
-    val state = rememberLazyGridState()
-    val listOfMeme = listOf(
-        MemeImages(
-            Res.drawable.ajtl_46),
-        MemeImages(
-            Res.drawable.left_exit_12_off_ramp_3),
-        MemeImages(
-            Res.drawable.p2is_38),
-        MemeImages(
-            Res.drawable.rcrc1_39),
-        MemeImages(
-            Res.drawable.t8r9a_26),
-        MemeImages(
-            Res.drawable.ajtl_46),
-        MemeImages(
-            Res.drawable.left_exit_12_off_ramp_3),
-        MemeImages(
-            Res.drawable.p2is_38),
-        MemeImages(
-            Res.drawable.rcrc1_39),
-        MemeImages(
-            Res.drawable.t8r9a_26),
-        MemeImages(
-            Res.drawable.ajtl_46),
-        MemeImages(
-            Res.drawable.left_exit_12_off_ramp_3),
-        MemeImages(
-            Res.drawable.p2is_38),
-        MemeImages(
-            Res.drawable.rcrc1_39),
-        MemeImages(
-            Res.drawable.t8r9a_26),
-        MemeImages(
-            Res.drawable.ajtl_46),
-        MemeImages(
-            Res.drawable.left_exit_12_off_ramp_3),
-        MemeImages(
-            Res.drawable.p2is_38),
-        MemeImages(
-            Res.drawable.rcrc1_39),
-        MemeImages(
-            Res.drawable.t8r9a_26))
+        val listImages = MemeTemplates.data
 
-    BottomSheetScaffold(
-        modifier = modifier,
-        sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-        sheetPeekHeight = 0.dp,
-        scaffoldState = bottomSheetState,
-        sheetContent = {
-            Text(text = "Choose your template", fontSize = 20.sp)
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Choose your template for your next meme masterspace", fontSize = 14.sp)
-
-            LazyVerticalGrid(
-                modifier = Modifier.fillMaxSize(),
-                columns = GridCells.Fixed(count = 2),
-                state = state,
-                content = {
-                    items(
-                        count = listOfMeme.count(),
-                        key = { index ->
-                            index
-                        },
-                        itemContent = { index ->
-                            MemeItem(
-                                listOfMeme[index].imageRes,
-                                onClickMeme = { resMeme ->
-
-                                }
-                            )
-                        }
-                    )
-                })
-        },
-        content = { paddingValues ->
-            Box(
-                modifier = Modifier.fillMaxSize().padding(paddingValues),
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    painter = painterResource(Res.drawable.meme_man),
-                    contentDescription = "meme man"
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            contentAlignment = Alignment.BottomEnd
+        ) {
+            if (listImages.isEmpty()) {
+                EmptyMemeView()
+            } else {
+                MemeListView(
+                    data = listImages,
+                    onClickMeme = onClickMeme
                 )
             }
-        },
-        floatingActionButton = {
+
             FloatingActionButton(
+                modifier = Modifier
+                    .padding(bottom = 32.dp, end = 16.dp),
+                containerColor = Color(0xFFEADDFF),
+//                Brush.horizontalGradient(
+//                    colorStops = arrayOf(
+//                        0.0F to Color(0xFFEADDFF),
+//                        1.0F to Color(0xFFD0BCFE)
+//                    )
+//                ),
+                contentColor = Color(ON_PRIMARY_FIXED_COLOR),
                 onClick = {
-                    coroutineScope.launch {
-                        bottomSheetState.bottomSheetState.expand()
-                    }
-                },
-                shape = CircleShape,
+                    showBottomSheet = true
+                }
             ) {
-                Icon(Icons.Filled.Add, "Large floating action button")
+                androidx.compose.material3.Icon(
+                    imageVector = Icons.Rounded.Add,
+                    contentDescription = "Add Meme"
+                )
             }
-        },
-        floatingActionButtonPosition = FabPosition.End)
+
+            if (showBottomSheet) {
+                TemplateMemeBottomSheet(
+                    data = MemeTemplates.data,
+                    onDismiss = { showBottomSheet = false },
+                    onClickMeme = onClickMeme
+                )
+            }
+        }
+    }
 }
