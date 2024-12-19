@@ -2,22 +2,21 @@ package me.androidbox.mastermeme.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -41,8 +40,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mastermeme.composeapp.generated.resources.Res
 import mastermeme.composeapp.generated.resources.p2is_38
+import me.androidbox.mastermeme.presentation.component.DefaultMenuAction
 import me.androidbox.mastermeme.presentation.component.EditorMenu
+import me.androidbox.mastermeme.presentation.component.TextSizeAction
 import org.jetbrains.compose.resources.painterResource
+
+const val SURFACE_CONTAINER_LOW_COLOR = 0xFF1D1B20
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,26 +74,40 @@ fun EditorScreen(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                modifier = Modifier.background(Color.DarkGray),
                 colors = TopAppBarColors(
-                    containerColor = Color.DarkGray,
-                    titleContentColor = Color.LightGray,
-                    actionIconContentColor = Color.LightGray,
-                    navigationIconContentColor = Color.LightGray,
-                    scrolledContainerColor = Color.LightGray
+                    containerColor = Color(SURFACE_CONTAINER_LOW_COLOR),
+                    scrolledContainerColor = Color(SURFACE_CONTAINER_LOW_COLOR),
+                    navigationIconContentColor = Color.White,
+                    titleContentColor = Color.White,
+                    actionIconContentColor = Color.White
                 ),
                 navigationIcon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Large floating action button",
-                        tint = Color.LightGray
-                    )
+                    IconButton(
+                        modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 16.dp)
+                            .size(44.dp),
+                        onClick = {}
+                    ) {
+                        Icon(
+                            modifier = Modifier.padding(10.dp).size(24.dp),
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Large floating action button",
+                            tint = Color(0xFFCCC2DC)
+                        )
+                    }
+
                 },
                 title = {
                     Text(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp),
                         text = "New meme",
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        style = TextStyle(color = Color(0xFFE6E0E9), fontSize = 24.sp)
+                    )
+                },
+                actions = {
+                    Spacer(
+                        modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, end = 16.dp)
+                            .size(44.dp)
                     )
                 }
             )
@@ -155,57 +172,41 @@ fun EditorScreen(
                 }
             }
 
-            Row(
+            EditorMenu(
                 modifier = Modifier.fillMaxWidth().height(70.dp).background(Color(0xFF1D1B20)),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (isEditMode) {
-                    EditorMenu(
-                        modifier = Modifier.fillMaxWidth(),
-                        textMemeData = listOfMemeText[memeIndex],
-                        onClose = { value ->
-                            listOfMemeText[memeIndex].fontSize.value = value.sp
+                isEditMode = isEditMode,
+                textMemeData = listOfMemeText.getOrNull(memeIndex),
+                textSizeAction = { action ->
+                    when (action) {
+                        is TextSizeAction.Close -> {
+                            listOfMemeText[memeIndex].fontSize.value = action.startValue.sp
                             isEditMode = false
-                        },
-                        onSliderPositionChange = { value ->
-                            listOfMemeText[memeIndex].fontSize.value = value.sp
-                            sliderPosition = value
-                        },
-                        onCheck = { isEditMode = false }
-                    )
-                } else {
-                    Row(
-                        modifier = Modifier.width(111.dp),
-                        horizontalArrangement = Arrangement.SpaceAround,
-                    ) {
-                        Text("1")
-                        Text("2")
+                        }
+                        is TextSizeAction.ValueChange -> {
+                            listOfMemeText[memeIndex].fontSize.value = action.value.sp
+                            sliderPosition = action.value
+                        }
+                        TextSizeAction.Save -> {
+                            isEditMode = false
+                        }
+                    }
+                },
+                defaultMenuAction = { action ->
+                    when (action) {
+                        DefaultMenuAction.AddMemeText -> {
+                            listOfMemeText.add(
+                                TextMemeData(
+                                    isEditState = false
+                                )
+                            )
+                        }
+                        DefaultMenuAction.SaveMeme -> {
+                            // TODO UPDATE HERE
+                        }
                     }
 
-                    Text(
-                        modifier = Modifier.width(111.dp).clickable(
-                            onClick = {
-                                listOfMemeText.add(
-                                    TextMemeData(
-                                        isEditState = false
-                                    )
-                                )
-                            }
-                        ),
-                        text = "Add Text",
-                        textAlign = TextAlign.Center,
-                        style = TextStyle(fontSize = 18.sp, color = Color.White)
-                    )
-
-                    Text(
-                        modifier = Modifier
-                            .width(111.dp),
-                        text = "Save Meme",
-                        textAlign = TextAlign.Center,
-                        style = TextStyle(fontSize = 18.sp, color = Color.White)
-                    )
                 }
-            }
+            )
 
             if (shouldShowDialog) {
                 EditMemeDialog(
