@@ -25,7 +25,7 @@ actual class MemeEditorOptionsImp(private val context: Context) : MemeEditorOpti
         val contentValues = ContentValues().apply {
             this.put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
             this.put(MediaStore.Images.Media.MIME_TYPE, "image/webp")
-            this.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/masterMemem")
+            this.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/masterMeme")
         }
 
         val uri = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)

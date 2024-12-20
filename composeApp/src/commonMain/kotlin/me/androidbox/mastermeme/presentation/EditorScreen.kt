@@ -223,13 +223,14 @@ fun EditorScreen(
                             )
                         }
                         DefaultMenuAction.SaveMeme -> {
-                            coroutineScope.launch(Dispatchers.Default) {
+                            coroutineScope.launch {
                                 val imageBitmap = graphicsLayer.toImageBitmap()
-                                memeViewModel.saveMeme(imageBitmap, "TextMemeSaved")
+                                println("Saving meme")
+                                memeViewModel.saveMeme(imageBitmap, listOfMemeText[memeIndex].text.value)
+                                println("Finished meme")
                             }
                         }
                     }
-
                 }
             )
 
