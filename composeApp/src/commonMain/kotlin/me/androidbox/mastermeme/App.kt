@@ -12,13 +12,14 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 fun App() {
     MaterialTheme {
-        MemeScreen(
+        /*MemeScreen(
             modifier = Modifier.fillMaxSize(),
             onClickMeme = {
                 println(it)
+
             }
-        )
-//        EditorScreen(modifier = Modifier.fillMaxSize())
+        )*/
+        EditorScreen(modifier = Modifier.fillMaxSize())
     }
 }
 

@@ -29,21 +29,28 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.layer.drawLayer
+import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import mastermeme.composeapp.generated.resources.Res
 import mastermeme.composeapp.generated.resources.p2is_38
 import me.androidbox.mastermeme.presentation.component.DefaultMenuAction
 import me.androidbox.mastermeme.presentation.component.EditorMenu
 import me.androidbox.mastermeme.presentation.component.TextSizeAction
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
 
 const val SURFACE_CONTAINER_LOW_COLOR = 0xFF1D1B20
 
@@ -69,6 +76,11 @@ fun EditorScreen(
     }
 
     var sliderPosition by remember { mutableFloatStateOf(12f) }
+
+    val coroutineScope = rememberCoroutineScope()
+    val graphicsLayer = rememberGraphicsLayer()
+
+    val memeViewModel = koinViewModel<MemeViewModel>()
 
     Scaffold(
         modifier = modifier,
@@ -122,7 +134,17 @@ fun EditorScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 Box(
-                    modifier = Modifier.wrapContentSize(),
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .drawWithContent {
+                            /** Call record to capture the content in the graphics layer */
+                            graphicsLayer.record {
+                                /** Draw the contents of the composable into the graphics layer */
+                                this@drawWithContent.drawContent()
+                            }
+                            /** Draw the graphics layer on the visible canvas */
+                            this.drawLayer(graphicsLayer)
+                        },
                     contentAlignment = Alignment.Center
                 ) {
 
@@ -201,7 +223,10 @@ fun EditorScreen(
                             )
                         }
                         DefaultMenuAction.SaveMeme -> {
-                            // TODO UPDATE HERE
+                            coroutineScope.launch(Dispatchers.Default) {
+                                val imageBitmap = graphicsLayer.toImageBitmap()
+                                memeViewModel.saveMeme(imageBitmap, "TextMemeSaved")
+                            }
                         }
                     }
 
