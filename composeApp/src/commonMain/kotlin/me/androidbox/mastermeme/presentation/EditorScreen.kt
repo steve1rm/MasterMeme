@@ -226,8 +226,13 @@ fun EditorScreen(
                             coroutineScope.launch {
                                 val imageBitmap = graphicsLayer.toImageBitmap()
                                 println("Saving meme")
-                                memeViewModel.saveMeme(imageBitmap, listOfMemeText[memeIndex].text.value)
-                                println("Finished meme")
+                                try {
+                                    val result = memeViewModel.saveMeme(imageBitmap, listOfMemeText[memeIndex].text.value)
+                                    println("Finished meme $result")
+                                }
+                                catch (exception: Exception) {
+                                    exception.printStackTrace()
+                                }
                             }
                         }
                     }
