@@ -38,7 +38,8 @@ fun SaveShareItem(
         icon()
 
         Column(
-            modifier = Modifier
+            modifier = Modifier,
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
                 text = title,
