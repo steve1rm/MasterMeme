@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableFloatStateOf
@@ -86,6 +87,13 @@ fun EditorScreen(
     val graphicsLayer = rememberGraphicsLayer()
 
     val memeViewModel = koinViewModel<MemeViewModel>()
+
+    LaunchedEffect(key1 = memeViewModel.memeState.value) {
+        if(!memeViewModel.memeState.value.isNullOrBlank()) {
+            println("saved meme path ${memeViewModel.memeState.value}")
+            /** TODO Save to local cache either room or realm */
+        }
+    }
 
     Scaffold(
         modifier = modifier,
@@ -228,20 +236,7 @@ fun EditorScreen(
                             )
                         }
                         DefaultMenuAction.SaveMeme -> {
-                            coroutineScope.launch {
-                                shouldShowSaveBottomSheet = true
-                                /*val imageBitmap = graphicsLayer.toImageBitmap()
-                                println("Saving meme")
-                                try {
-                                    val result = memeViewModel.saveMeme(imageBitmap, listOfMemeText[memeIndex].text.value)
-                                    println("Finished meme $result")
-                                }
-                                catch (exception: Exception) {
-                                    exception.printStackTrace()
-                                }*/
-
-
-                            }
+                            shouldShowSaveBottomSheet = true
                         }
                     }
                 }
@@ -266,14 +261,20 @@ fun EditorScreen(
                     onDismiss = {
                         shouldShowSaveBottomSheet = false
                     },
-                    onSaveClicked = {},
+                    onSaveClicked = {
+                        println("onSaveClicked")
+                    },
                     onShareClicked = {},
                     content = { onSave, onShare ->
                         SaveShareContent(
                             modifier = Modifier.padding(horizontal = 16.dp),
                             onSaveClicked = {
-                                onSave()
-                                println("Save content")
+                                coroutineScope.launch {
+                                    val imageBitmap = graphicsLayer.toImageBitmap()
+                                    println("Saving meme")
+
+                                    memeViewModel.saveMeme(imageBitmap, listOfMemeText[memeIndex].text.value)
+                                }
                             },
                             onShareClicked = {
                                 onShare()

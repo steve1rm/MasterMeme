@@ -12,13 +12,14 @@ class MemeViewModel(
     private val memeEditorOptions: MemeEditorOptions
 ): ViewModel() {
 
-    val memeState = mutableStateOf<String?>(null)
+    var memeState = mutableStateOf<String?>(null)
         private set
 
     fun saveMeme(imageBitmap: ImageBitmap, fileName: String) {
         viewModelScope.launch {
             try {
                 memeState.value = memeEditorOptions.saveMeme(imageBitmap, fileName)
+                println("Finished meme ${memeState.value}")
             }
             catch (exception: Exception) {
                 ensureActive()

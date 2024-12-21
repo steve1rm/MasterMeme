@@ -44,7 +44,7 @@ actual class MemeEditorOptionsImp(private val context: Context) : MemeEditorOpti
                             println("MEME outputstream completed")
                         }
                     }
-                    println("MEME return uir")
+                    println("MEME success $uri")
                     uri
                 }
 
@@ -57,7 +57,7 @@ actual class MemeEditorOptionsImp(private val context: Context) : MemeEditorOpti
             }
         }
 
-        println("MEME final ${uri?.path}")
+        println("MEME failed ${uri?.path}")
         return uri?.path
     }
 
