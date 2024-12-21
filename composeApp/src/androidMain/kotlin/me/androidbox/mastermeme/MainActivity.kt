@@ -50,7 +50,10 @@ fun AppAndroidPreview() {
 @Preview(showBackground = true)
 @Composable
 fun SaveShareContentPreview() {
-    SaveShareContent()
+    SaveShareContent(
+        onSaveClicked = {},
+        onShareClicked = {}
+    )
 }
 
 @Preview
@@ -60,6 +63,7 @@ fun SaveItemPreview() {
         title = "Save to device",
         description = "Save this item to your collection.",
         icon = { Icon(imageVector = vectorResource(resource = Res.drawable.download), contentDescription = null, tint = Color.Unspecified) },
+        onClick = {}
     )
 }
 
@@ -70,6 +74,7 @@ fun ShareItemPreview() {
         title = "Share the meme",
         description = "Share this item with your friends.",
         icon = { Icon(imageVector = vectorResource(resource = Res.drawable.share), contentDescription = null, tint = Color.Unspecified) },
+        onClick = {}
     )
 }
 

@@ -15,7 +15,9 @@ import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun SaveShareContent(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSaveClicked: () -> Unit,
+    onShareClicked: () -> Unit
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -31,7 +33,8 @@ fun SaveShareContent(
                     contentDescription = null,
                     tint = Color.Unspecified
                 )
-            }
+            },
+            onClick = onSaveClicked
         )
 
         SaveShareItem(
@@ -43,7 +46,8 @@ fun SaveShareContent(
                     contentDescription = null,
                     tint = Color.Unspecified
                 )
-            }
+            },
+            onClick = onShareClicked
         )
     }
 }

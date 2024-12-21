@@ -47,6 +47,7 @@ import mastermeme.composeapp.generated.resources.Res
 import mastermeme.composeapp.generated.resources.p2is_38
 import me.androidbox.mastermeme.presentation.component.DefaultMenuAction
 import me.androidbox.mastermeme.presentation.component.EditorMenu
+import me.androidbox.mastermeme.presentation.component.SaveShareContent
 import me.androidbox.mastermeme.presentation.component.TextSizeAction
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -61,6 +62,11 @@ fun EditorScreen(
     var shouldShowDialog by remember {
         mutableStateOf(false)
     }
+
+    var shouldShowSaveBottomSheet by remember {
+        mutableStateOf(false)
+    }
+
 
     val listOfMemeText = remember {
         mutableStateListOf<TextMemeData>()
@@ -223,7 +229,8 @@ fun EditorScreen(
                         }
                         DefaultMenuAction.SaveMeme -> {
                             coroutineScope.launch {
-                                val imageBitmap = graphicsLayer.toImageBitmap()
+                                shouldShowSaveBottomSheet = true
+                                /*val imageBitmap = graphicsLayer.toImageBitmap()
                                 println("Saving meme")
                                 try {
                                     val result = memeViewModel.saveMeme(imageBitmap, listOfMemeText[memeIndex].text.value)
@@ -231,7 +238,9 @@ fun EditorScreen(
                                 }
                                 catch (exception: Exception) {
                                     exception.printStackTrace()
-                                }
+                                }*/
+
+
                             }
                         }
                     }
@@ -249,6 +258,29 @@ fun EditorScreen(
                         println(newMemeText)
                         listOfMemeText[memeIndex].text.value = newMemeText
                     },
+                )
+            }
+
+            if(shouldShowSaveBottomSheet) {
+                SaveMemeBottomSheet(
+                    onDismiss = {
+                        shouldShowSaveBottomSheet = false
+                    },
+                    onSaveClicked = {},
+                    onShareClicked = {},
+                    content = { onSave, onShare ->
+                        SaveShareContent(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            onSaveClicked = {
+                                onSave()
+                                println("Save content")
+                            },
+                            onShareClicked = {
+                                onShare()
+                                println("Share content")
+                            }
+                        )
+                    }
                 )
             }
         }

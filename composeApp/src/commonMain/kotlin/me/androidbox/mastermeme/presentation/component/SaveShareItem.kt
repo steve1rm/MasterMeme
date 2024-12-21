@@ -1,5 +1,6 @@
 package me.androidbox.mastermeme.presentation.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,9 +25,12 @@ fun SaveShareItem(
     title: String,
     description: String,
     icon: @Composable () -> Unit,
+    onClick: () -> Unit
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier.clickable(
+            onClick = onClick
+        ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -59,6 +63,7 @@ fun SaveItemPreview() {
         icon = {
             Icon(Icons.Filled.ArrowDropDown, contentDescription = null)
         },
+        onClick = {}
     )
 }
 @Preview
@@ -70,5 +75,6 @@ fun ShareItemPreview() {
         icon = {
             Icon(Icons.Filled.Share, contentDescription = null)
         },
+        onClick = {}
     )
 }
