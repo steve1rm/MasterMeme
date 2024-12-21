@@ -1,34 +1,30 @@
 package me.androidbox.mastermeme.presentation
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.async
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.launch
 import me.androidbox.mastermeme.data.MemeEditorOptions
 
 class MemeViewModel(
     private val memeEditorOptions: MemeEditorOptions
 ): ViewModel() {
 
-    suspend fun saveMeme(imageBitmap: ImageBitmap, fileName: String): String? {
-        var uriResult: String? = null
+    val memeState = mutableStateOf<String?>(null)
+        private set
 
-        try {
-             val result = viewModelScope.async {
-                val pathResult = memeEditorOptions.saveMeme(imageBitmap, fileName)
-
-                pathResult
+    fun saveMeme(imageBitmap: ImageBitmap, fileName: String) {
+        viewModelScope.launch {
+            try {
+                memeState.value = memeEditorOptions.saveMeme(imageBitmap, fileName)
             }
-            uriResult = result.await()
-        }
-        catch (exception: Exception) {
-            if(exception is CancellationException) {
-                throw CancellationException(exception.message)
-            }
-            exception.printStackTrace()
-        }
+            catch (exception: Exception) {
+                ensureActive()
 
-        return uriResult
+                exception.printStackTrace()
+            }
+        }
     }
 }
