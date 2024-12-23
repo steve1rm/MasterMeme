@@ -28,6 +28,7 @@ import kotlin.math.roundToInt
 
 @Composable
 fun DraggableText(
+    modifier: Modifier = Modifier,
     textMemeData: TextMemeData,
     updateCoordinates: (x: Float, y: Float) -> Unit,
     onClickClose: () -> Unit,
@@ -36,7 +37,7 @@ fun DraggableText(
 ) {
 
     Box(
-        modifier = Modifier.offset {
+        modifier = modifier.offset {
             IntOffset(textMemeData.x.value.roundToInt(), textMemeData.y.value.roundToInt())
         }
             .pointerInput(Unit) {
@@ -54,7 +55,18 @@ fun DraggableText(
         Box(
             modifier = Modifier
                 .background(Color.Transparent)
-                .border(shape = RoundedCornerShape(4.dp), color = Color.White, width = 1.dp)
+                .then(
+                    if(textMemeData.isEditState.value) {
+                        Modifier.border(
+                            shape = RoundedCornerShape(4.dp),
+                            color = Color.White,
+                            width = 1.dp
+                        )
+                    }
+                    else {
+                        Modifier
+                    }
+                )
                 .padding(vertical = 14.dp, horizontal = 12.dp)
         ) {
             Box(
@@ -80,19 +92,21 @@ fun DraggableText(
             }
         }
 
-        Icon(
-            painter = painterResource(resource = Res.drawable.close_text),
-            contentDescription = "close",
-            modifier = Modifier
-                .size(20.dp)
-                .align(Alignment.TopEnd)
-                .offset(
-                    x = 8.dp,
-                    y = -(8).dp
-                )
-                .clickable(onClick = onClickClose),
-            tint = Color.Unspecified
-        )
+        if(textMemeData.isEditState.value) {
+            Icon(
+                painter = painterResource(resource = Res.drawable.close_text),
+                contentDescription = "close",
+                modifier = Modifier
+                    .size(20.dp)
+                    .align(Alignment.TopEnd)
+                    .offset(
+                        x = 8.dp,
+                        y = -(8).dp
+                    )
+                    .clickable(onClick = onClickClose),
+                tint = Color.Unspecified
+            )
+        }
     }
 }
 

@@ -13,7 +13,7 @@ data class TextMemeData(
     val text: MutableState<String> = mutableStateOf("DOUBLE TAP TO EDIT"),
     val x: MutableFloatState = mutableFloatStateOf(0.0f),
     val y: MutableFloatState = mutableFloatStateOf(0.0f),
-    val isEditState: Boolean,
+    var isEditState: MutableState<Boolean> = mutableStateOf(true),
     var fontSize: MutableState<TextUnit> = mutableStateOf(28.sp)
 )
 

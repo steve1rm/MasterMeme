@@ -2,6 +2,8 @@ package me.androidbox.mastermeme.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,10 +38,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -88,9 +95,21 @@ fun EditorScreen(
 
     val memeViewModel = koinViewModel<MemeViewModel>()
 
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
+
+    val focusRequester = remember {
+        FocusRequester()
+    }
+    val focusManager = LocalFocusManager.current
+    var isFocused by remember {
+        mutableStateOf(false)
+    }
+
     LaunchedEffect(key1 = memeViewModel.memeState.value) {
         if(!memeViewModel.memeState.value.isNullOrBlank()) {
             println("saved meme path ${memeViewModel.memeState.value}")
+            shouldShowSaveBottomSheet = false
+         //   sheetState.hide()
             /** TODO Save to local cache either room or realm */
         }
     }
@@ -119,7 +138,6 @@ fun EditorScreen(
                             tint = Color(0xFFCCC2DC)
                         )
                     }
-
                 },
                 title = {
                     Text(
@@ -171,6 +189,16 @@ fun EditorScreen(
                     listOfMemeText.forEachIndexed { index, data ->
                         key(data.id) {
                             DraggableText(
+                                modifier = Modifier
+                                    .focusable()
+                                    .focusRequester(focusRequester)
+                                    .onFocusChanged {
+                                        val textIndex = listOfMemeText.indexOfFirst {
+                                            it.id == data.id
+                                        }
+                                        listOfMemeText[textIndex].isEditState.value = it.isFocused
+                                        println("MEME FOCUS ${it.isFocused}")
+                                    },
                                 textMemeData = data,
                                 onClickClose = {
                                     println("onclickClose $index ${listOfMemeText[index].text.value} ${listOfMemeText[index].x.value} ${listOfMemeText[index].y.value}")
@@ -185,13 +213,14 @@ fun EditorScreen(
                                     isEditMode = true
                                     memeIndex = index
                                     sliderPosition = fontSize.value
+                                    listOfMemeText[memeIndex].isEditState.value = true
+                                    focusRequester.requestFocus()
                                 },
                                 onDoubleClickText = { text ->
                                     memeIndex = index
                                     shouldShowDialog = true
                                 },
                                 updateCoordinates = { x, y ->
-                                    println("update coordinates index $index X $x Y $y")
                                     val textIndex = listOfMemeText.indexOfFirst {
                                         it.id == data.id
                                     }
@@ -231,12 +260,15 @@ fun EditorScreen(
                         DefaultMenuAction.AddMemeText -> {
                             listOfMemeText.add(
                                 TextMemeData(
-                                    isEditState = false
+                                    // isEditState = false
                                 )
                             )
                         }
                         DefaultMenuAction.SaveMeme -> {
-                            shouldShowSaveBottomSheet = true
+                             shouldShowSaveBottomSheet = true
+                            coroutineScope.launch {
+                             //   sheetState.expand()
+                            }
                         }
                     }
                 }
@@ -258,13 +290,16 @@ fun EditorScreen(
 
             if(shouldShowSaveBottomSheet) {
                 SaveMemeBottomSheet(
+                    sheetState = sheetState,
                     onDismiss = {
                         shouldShowSaveBottomSheet = false
                     },
                     onSaveClicked = {
                         println("onSaveClicked")
                     },
-                    onShareClicked = {},
+                    onShareClicked = {
+                        println("onShareClicked")
+                    },
                     content = { onSave, onShare ->
                         SaveShareContent(
                             modifier = Modifier.padding(horizontal = 16.dp),
