@@ -28,4 +28,8 @@ class MemeViewModel(
             }
         }
     }
+
+    fun shareMeme() {
+        memeEditorOptions.shareMeme()
+    }
 }

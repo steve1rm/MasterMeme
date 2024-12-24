@@ -2,6 +2,7 @@ package me.androidbox.mastermeme
 
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Environment
@@ -61,7 +62,19 @@ actual class MemeEditorOptionsImp(private val context: Context) : MemeEditorOpti
         return uri?.path
     }
 
-    actual override suspend fun openMeme() {
-        TODO("Not yet implemented")
+    actual override fun shareMeme() {
+        println("ShareMeme - android")
+
+        val sendIntent = Intent().apply {
+            this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            this.action = Intent.ACTION_SEND
+            this.putExtra(Intent.EXTRA_TEXT, "This is the meme path")
+            this.type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, "Share Meme").apply {
+            this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context.startActivity(shareIntent)
     }
 }

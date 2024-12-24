@@ -17,7 +17,7 @@ actual class MemeEditorOptionsImp : MemeEditorOptions {
         TODO("Not yet implemented")
     }
 
-    actual override suspend fun openMeme() {
+    actual suspend fun shareMeme() {
         TODO("Not yet implemented")
     }
 }
