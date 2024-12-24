@@ -4,14 +4,13 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import me.androidbox.mastermeme.data.MemeEditorOptions
@@ -62,19 +61,22 @@ actual class MemeEditorOptionsImp(private val context: Context) : MemeEditorOpti
         return uri?.path
     }
 
-    actual override fun shareMeme() {
-        println("ShareMeme - android")
+    actual override fun shareMeme(imagePath: String?) {
+        println("ShareMeme - android $imagePath")
 
+        if(imagePath != null) {
+        val imageUri = Uri.parse("content://media/$imagePath")
         val sendIntent = Intent().apply {
             this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             this.action = Intent.ACTION_SEND
-            this.putExtra(Intent.EXTRA_TEXT, "This is the meme path")
-            this.type = "text/plain"
+            this.putExtra(Intent.EXTRA_STREAM, imageUri)
+            this.type = "media/*"
         }
 
-        val shareIntent = Intent.createChooser(sendIntent, "Share Meme").apply {
+        val shareIntent = Intent.createChooser(sendIntent, null).apply {
             this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         context.startActivity(shareIntent)
+            }
     }
 }

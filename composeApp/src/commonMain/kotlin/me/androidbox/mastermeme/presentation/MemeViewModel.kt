@@ -30,6 +30,6 @@ class MemeViewModel(
     }
 
     fun shareMeme() {
-        memeEditorOptions.shareMeme()
+        memeEditorOptions.shareMeme(memeState.value)
     }
 }
