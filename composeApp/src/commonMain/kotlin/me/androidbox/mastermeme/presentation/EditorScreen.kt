@@ -51,6 +51,7 @@ import mastermeme.composeapp.generated.resources.Res
 import mastermeme.composeapp.generated.resources.p2is_38
 import me.androidbox.mastermeme.presentation.component.DefaultMenuAction
 import me.androidbox.mastermeme.presentation.component.EditorMenu
+import me.androidbox.mastermeme.presentation.component.LeaveEditorDialog
 import me.androidbox.mastermeme.presentation.component.SaveShareContent
 import me.androidbox.mastermeme.presentation.component.TextSizeAction
 import org.jetbrains.compose.resources.painterResource
@@ -64,6 +65,10 @@ fun EditorScreen(
     modifier: Modifier = Modifier
 ) {
     var shouldShowDialog by remember {
+        mutableStateOf(false)
+    }
+
+    var shouldShowLeaveDialog by remember {
         mutableStateOf(false)
     }
 
@@ -118,7 +123,9 @@ fun EditorScreen(
                     IconButton(
                         modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 16.dp)
                             .size(44.dp),
-                        onClick = {}
+                        onClick = {
+                            shouldShowLeaveDialog = true
+                        }
                     ) {
                         Icon(
                             modifier = Modifier.padding(10.dp).size(24.dp),
@@ -274,6 +281,18 @@ fun EditorScreen(
                         println(newMemeText)
                         listOfMemeText[memeIndex].text.value = newMemeText
                     },
+                )
+            }
+
+            if (shouldShowLeaveDialog) {
+                LeaveEditorDialog(
+                    onDismiss = {
+                        shouldShowLeaveDialog = false
+                    },
+                    onLeave = {
+                        shouldShowLeaveDialog = false
+                        // TODO HANDLE NAVIGATION
+                    }
                 )
             }
 
