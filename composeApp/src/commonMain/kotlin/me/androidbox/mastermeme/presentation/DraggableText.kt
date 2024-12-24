@@ -42,12 +42,14 @@ fun DraggableText(
         }
             .pointerInput(Unit) {
                 detectDragGestures { change, dragAmount ->
-                    change.consume()
+                    if (textMemeData.isEditState.value) {
+                        change.consume()
 
-                    updateCoordinates(
-                        textMemeData.x.value + dragAmount.x,
-                        textMemeData.y.value + dragAmount.y
-                    )
+                        updateCoordinates(
+                            textMemeData.x.value + dragAmount.x,
+                            textMemeData.y.value + dragAmount.y
+                        )
+                    }
                 }
             }
     ) {

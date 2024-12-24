@@ -3,7 +3,7 @@ package me.androidbox.mastermeme.presentation
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,14 +38,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -81,11 +77,14 @@ fun EditorScreen(
     }
 
     var memeIndex by remember {
-        mutableIntStateOf(0)
+        mutableIntStateOf(-1)
     }
 
-    var isEditMode by remember {
-        mutableStateOf(false)
+    LaunchedEffect(memeIndex) {
+        if (listOfMemeText.size == 0) return@LaunchedEffect
+        for (index in 0 until listOfMemeText.size) {
+            listOfMemeText[index].isEditState.value = index == memeIndex
+        }
     }
 
     var sliderPosition by remember { mutableFloatStateOf(12f) }
@@ -97,20 +96,10 @@ fun EditorScreen(
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 
-    val focusRequester = remember {
-        FocusRequester()
-    }
-    val focusManager = LocalFocusManager.current
-    var isFocused by remember {
-        mutableStateOf(false)
-    }
-
     LaunchedEffect(key1 = memeViewModel.memeState.value) {
         if(!memeViewModel.memeState.value.isNullOrBlank()) {
             println("saved meme path ${memeViewModel.memeState.value}")
             shouldShowSaveBottomSheet = false
-         //   sheetState.hide()
-            /** TODO Save to local cache either room or realm */
         }
     }
 
@@ -180,7 +169,16 @@ fun EditorScreen(
                 ) {
 
                     Image(
-                        modifier = Modifier.padding(horizontal = 16.dp).size(380.dp),
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .size(380.dp)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                                onClick = {
+                                    memeIndex = -1
+                                }
+                            ),
                         contentScale = ContentScale.Crop,
                         painter = painterResource(resource = Res.drawable.p2is_38),
                         contentDescription = "meme"
@@ -189,45 +187,41 @@ fun EditorScreen(
                     listOfMemeText.forEachIndexed { index, data ->
                         key(data.id) {
                             DraggableText(
-                                modifier = Modifier
-                                    .focusable()
-                                    .focusRequester(focusRequester)
-                                    .onFocusChanged {
-                                        val textIndex = listOfMemeText.indexOfFirst {
-                                            it.id == data.id
-                                        }
-                                        listOfMemeText[textIndex].isEditState.value = it.isFocused
-                                        println("MEME FOCUS ${it.isFocused}")
-                                    },
                                 textMemeData = data,
                                 onClickClose = {
-                                    println("onclickClose $index ${listOfMemeText[index].text.value} ${listOfMemeText[index].x.value} ${listOfMemeText[index].y.value}")
-                                    val textIndex = listOfMemeText.indexOfFirst {
+                                    val currentIndex = listOfMemeText.indexOfFirst {
                                         it.id == data.id
                                     }
-                                    if (textIndex != -1) {
-                                        listOfMemeText.removeAt(textIndex)
+                                    if (currentIndex != -1) {
+                                        listOfMemeText.removeAt(currentIndex)
                                     }
                                 },
                                 onSingleClick = { fontSize ->
-                                    isEditMode = true
-                                    memeIndex = index
+                                    println("ON SINGLE CLICK")
+                                    val currentIndex = listOfMemeText.indexOfFirst {
+                                        it.id == data.id
+                                    }
+                                    memeIndex = currentIndex
+                                    listOfMemeText[currentIndex].isEditState.value = true
+
                                     sliderPosition = fontSize.value
-                                    listOfMemeText[memeIndex].isEditState.value = true
-                                    focusRequester.requestFocus()
                                 },
                                 onDoubleClickText = { text ->
-                                    memeIndex = index
+                                    println("ON DOUBLE CLICK")
+                                    val currentIndex = listOfMemeText.indexOfFirst {
+                                        it.id == data.id
+                                    }
+                                    memeIndex = currentIndex
+
                                     shouldShowDialog = true
                                 },
                                 updateCoordinates = { x, y ->
-                                    val textIndex = listOfMemeText.indexOfFirst {
+                                    val currentIndex = listOfMemeText.indexOfFirst {
                                         it.id == data.id
                                     }
-
-                                    if (textIndex != -1) {
-                                        listOfMemeText[textIndex].x.value = x
-                                        listOfMemeText[textIndex].y.value = y
+                                    if (currentIndex != -1) {
+                                        listOfMemeText[currentIndex].x.value = x
+                                        listOfMemeText[currentIndex].y.value = y
                                     }
                                 }
                             )
@@ -238,36 +232,31 @@ fun EditorScreen(
 
             EditorMenu(
                 modifier = Modifier.fillMaxWidth().height(70.dp).background(Color(0xFF1D1B20)),
-                isEditMode = isEditMode,
                 textMemeData = listOfMemeText.getOrNull(memeIndex),
                 textSizeAction = { action ->
                     when (action) {
                         is TextSizeAction.Close -> {
                             listOfMemeText[memeIndex].fontSize.value = action.startValue.sp
-                            isEditMode = false
+                            memeIndex = -1
                         }
                         is TextSizeAction.ValueChange -> {
                             listOfMemeText[memeIndex].fontSize.value = action.value.sp
                             sliderPosition = action.value
                         }
                         TextSizeAction.Save -> {
-                            isEditMode = false
+                            memeIndex = -1
                         }
                     }
                 },
                 defaultMenuAction = { action ->
                     when (action) {
                         DefaultMenuAction.AddMemeText -> {
-                            listOfMemeText.add(
-                                TextMemeData(
-                                    // isEditState = false
-                                )
-                            )
+                            listOfMemeText.add(TextMemeData())
+                            memeIndex = listOfMemeText.size - 1
                         }
                         DefaultMenuAction.SaveMeme -> {
                              shouldShowSaveBottomSheet = true
                             coroutineScope.launch {
-                             //   sheetState.expand()
                             }
                         }
                     }
