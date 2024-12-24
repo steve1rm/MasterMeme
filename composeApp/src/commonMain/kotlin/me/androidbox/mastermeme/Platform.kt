@@ -11,5 +11,5 @@ expect fun getPlatform(): Platform
 
 expect class MemeEditorOptionsImp : MemeEditorOptions {
     override suspend fun saveMeme(imageBitmap: ImageBitmap, fileName: String): String?
-    override suspend fun openMeme()
+    override fun shareMeme(imagePath: String?)
 }

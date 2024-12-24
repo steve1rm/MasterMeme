@@ -322,6 +322,7 @@ fun EditorScreen(
                             onShareClicked = {
                                 onShare()
                                 println("Share content")
+                                memeViewModel.shareMeme()
                             }
                         )
                     }
