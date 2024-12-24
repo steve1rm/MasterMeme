@@ -10,7 +10,7 @@ import kotlin.random.Random
 
 data class TextMemeData(
     val id: Int = Random.nextInt(),
-    val text: MutableState<String> = mutableStateOf("DOUBLE TAP TO EDIT"),
+    val text: MutableState<String> = mutableStateOf("Tap twice to edit"),
     val x: MutableFloatState = mutableFloatStateOf(0.0f),
     val y: MutableFloatState = mutableFloatStateOf(0.0f),
     var isEditState: MutableState<Boolean> = mutableStateOf(true),
