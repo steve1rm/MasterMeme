@@ -1,11 +1,8 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package me.androidbox.mastermeme.presentation.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,7 +12,6 @@ import me.androidbox.mastermeme.presentation.TextMemeData
 @Composable
 fun EditorMenu(
     modifier: Modifier = Modifier,
-    isEditMode: Boolean,
     textMemeData: TextMemeData?,
     textSizeAction: (TextSizeAction) -> Unit,
     defaultMenuAction: (DefaultMenuAction) -> Unit
@@ -24,7 +20,7 @@ fun EditorMenu(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        if (isEditMode) {
+        if (textMemeData != null) {
             TextSizeMenu(
                 modifier = modifier.fillMaxWidth().padding(top = 12.dp, bottom = 10.dp, start = 16.dp, end = 16.dp),
                 data = textMemeData,
