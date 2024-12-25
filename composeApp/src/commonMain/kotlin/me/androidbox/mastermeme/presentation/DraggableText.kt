@@ -32,7 +32,7 @@ fun DraggableText(
     textMemeData: TextMemeData,
     updateCoordinates: (x: Float, y: Float) -> Unit,
     onClickClose: () -> Unit,
-    onDoubleClickText: (text: String) -> Unit,
+    onDoubleClickText: () -> Unit,
     onSingleClick: (fontSize: TextUnit) -> Unit
 ) {
 
@@ -78,7 +78,7 @@ fun DraggableText(
                     modifier = Modifier.pointerInput(Unit) {
                         this.detectTapGestures(
                             onDoubleTap = {
-                                onDoubleClickText(textMemeData.text.value)
+                                onDoubleClickText.invoke()
                             },
                             onTap = {
                                 onSingleClick(textMemeData.fontSize.value)

@@ -1,17 +1,11 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package me.androidbox.mastermeme.presentation
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,72 +32,51 @@ fun MemeScreen(
     modifier: Modifier = Modifier,
     onClickMeme: (memeRes: DrawableResource) -> Unit
 ) {
-    Scaffold(
-        containerColor = Color(SURFACE_CONTAINER_LOWEST_COLOR),
-        modifier = modifier.fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                colors = TopAppBarColors(
-                    containerColor = Color(SURFACE_CONTAINER_LOW_COLOR),
-                    scrolledContainerColor = Color(SURFACE_CONTAINER_LOW_COLOR),
-                    navigationIconContentColor = Color.White,
-                    titleContentColor = Color.White,
-                    actionIconContentColor = Color.White
-                ),
-                title = {
-                    androidx.compose.material3.Text("Your memes")
-                }
+
+    var showBottomSheet by remember { mutableStateOf(false) }
+
+    val listImages = MemeTemplates.data
+
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.BottomEnd
+    ) {
+        if (listImages.isEmpty()) {
+            EmptyMemeView()
+        } else {
+            MemeListView(
+                data = listImages,
+                onClickMeme = onClickMeme
             )
         }
-    ) { innerPadding ->
 
-        var showBottomSheet by remember { mutableStateOf(false) }
-
-        val listImages = MemeTemplates.data
-
-        Box(
+        FloatingActionButton(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            contentAlignment = Alignment.BottomEnd
-        ) {
-            if (listImages.isEmpty()) {
-                EmptyMemeView()
-            } else {
-                MemeListView(
-                    data = listImages,
-                    onClickMeme = onClickMeme
-                )
-            }
-
-            FloatingActionButton(
-                modifier = Modifier
-                    .padding(bottom = 32.dp, end = 16.dp),
-                containerColor = Color(0xFFEADDFF),
+                .padding(bottom = 32.dp, end = 16.dp),
+            containerColor = Color(0xFFEADDFF),
 //                Brush.horizontalGradient(
 //                    colorStops = arrayOf(
 //                        0.0F to Color(0xFFEADDFF),
 //                        1.0F to Color(0xFFD0BCFE)
 //                    )
 //                ),
-                contentColor = Color(ON_PRIMARY_FIXED_COLOR),
-                onClick = {
-                    showBottomSheet = true
-                }
-            ) {
-                androidx.compose.material3.Icon(
-                    imageVector = Icons.Rounded.Add,
-                    contentDescription = "Add Meme"
-                )
+            contentColor = Color(ON_PRIMARY_FIXED_COLOR),
+            onClick = {
+                showBottomSheet = true
             }
+        ) {
+            Icon(
+                imageVector = Icons.Rounded.Add,
+                contentDescription = "Add Meme"
+            )
+        }
 
-            if (showBottomSheet) {
-                TemplateMemeBottomSheet(
-                    data = MemeTemplates.data,
-                    onDismiss = { showBottomSheet = false },
-                    onClickMeme = onClickMeme
-                )
-            }
+        if (showBottomSheet) {
+            TemplateMemeBottomSheet(
+                data = MemeTemplates.data,
+                onDismiss = { showBottomSheet = false },
+                onClickMeme = onClickMeme
+            )
         }
     }
 }
