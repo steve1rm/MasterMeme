@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import mastermeme.composeapp.generated.resources.Res
 import mastermeme.composeapp.generated.resources.meme_man
 import me.androidbox.mastermeme.presentation.OUTLINE_COLOR
-import org.jetbrains.compose.resources.vectorResource
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun EmptyMemeView(modifier: Modifier = Modifier) {
@@ -28,7 +28,7 @@ fun EmptyMemeView(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            imageVector = vectorResource(Res.drawable.meme_man),
+            painter = painterResource(Res.drawable.meme_man),
             contentDescription = "Illustration Empty Meme"
         )
         Spacer(modifier = Modifier.height(32.dp))

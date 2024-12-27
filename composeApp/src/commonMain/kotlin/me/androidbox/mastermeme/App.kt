@@ -74,6 +74,7 @@ fun MasterMemeApp(
                         .fillMaxSize()
                         .padding(innerPadding)
                         .background(Color(SURFACE_CONTAINER_LOWEST_COLOR)),
+                    viewModel = memeViewModel,
                     onClickMeme = {
                         memeViewModel.selectMeme(it)
                         navController.navigate(MasterMemeScreen.EditorScreen.name)

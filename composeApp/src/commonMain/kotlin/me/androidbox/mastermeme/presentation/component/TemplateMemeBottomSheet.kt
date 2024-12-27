@@ -17,18 +17,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import me.androidbox.mastermeme.data.MemeTemplates
 import me.androidbox.mastermeme.presentation.LIGHT_GRAY_C0LOR
 import me.androidbox.mastermeme.presentation.SCRIM_COLOR
 import me.androidbox.mastermeme.presentation.SURFACE_CONTAINER_LOW_COLOR
-import org.jetbrains.compose.resources.DrawableResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TemplateMemeBottomSheet(
     modifier: Modifier = Modifier,
-    data: List<DrawableResource>,
     onDismiss: () -> Unit,
-    onClickMeme: (memeRes: DrawableResource) -> Unit
+    onClickMeme: (memeRes: Any) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false,
@@ -62,7 +61,7 @@ fun TemplateMemeBottomSheet(
         Spacer(modifier = Modifier.height(20.dp))
         MemeListView(
             showTopGradient = false,
-            data = data,
+            data = MemeTemplates.data,
             onClickMeme = onClickMeme
         )
     }

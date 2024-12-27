@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
@@ -28,9 +29,10 @@ import org.jetbrains.compose.resources.painterResource
 fun MemeListView(
     modifier: Modifier = Modifier,
     showTopGradient: Boolean = true,
-    data: List<DrawableResource>,
-    onClickMeme: (memeRes: DrawableResource) -> Unit
+    data: List<Any>,
+    onClickMeme: (memeRes: Any) -> Unit
 ) {
+
     Box(modifier = modifier.fillMaxSize()) {
         LazyVerticalGrid(
             modifier = Modifier.fillMaxSize(),
@@ -40,17 +42,39 @@ fun MemeListView(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(data.size) { index ->
-                Image(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1f)
-                        .clip(RoundedCornerShape(8.dp))
-                        .clickable {
-                            onClickMeme.invoke(data[index])
-                        },
-                    painter = painterResource(data[index]), contentDescription = "Images",
-                    contentScale = ContentScale.Crop
-                )
+                val item = data[index]
+                when (item) {
+                    is DrawableResource -> {
+                        Image(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(1f)
+                                .clip(RoundedCornerShape(8.dp))
+                                .clickable {
+                                    onClickMeme.invoke(item)
+                                },
+                            painter = painterResource(item), contentDescription = "Images",
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+
+                    is String -> {
+                        AsyncImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(1f)
+                                .clip(RoundedCornerShape(8.dp))
+                                .clickable {
+                                    onClickMeme.invoke(item)
+                                },
+                            contentScale = ContentScale.Crop,
+                            model = item,
+                            contentDescription = "Image $item"
+                        )
+                    }
+
+                    else -> Unit
+                }
             }
         }
         if (showTopGradient) {

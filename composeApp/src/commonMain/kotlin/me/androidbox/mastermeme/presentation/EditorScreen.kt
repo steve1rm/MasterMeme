@@ -36,12 +36,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil3.compose.AsyncImage
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import me.androidbox.mastermeme.presentation.component.DefaultMenuAction
 import me.androidbox.mastermeme.presentation.component.EditorMenu
 import me.androidbox.mastermeme.presentation.component.LeaveEditorDialog
 import me.androidbox.mastermeme.presentation.component.TextSizeAction
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
 const val SURFACE_CONTAINER_LOW_COLOR = 0xFF1D1B20
@@ -123,21 +125,45 @@ fun EditorScreen(
             ) {
 
                 memeViewModel.selectedMemeState.value?.let {
-                    Image(
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .size(380.dp)
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null,
-                                onClick = {
-                                    memeIndex = -1
-                                }
-                            ),
-                        contentScale = ContentScale.Crop,
-                        painter = painterResource(resource = it),
-                        contentDescription = "meme"
-                    )
+                    when (it) {
+                        is DrawableResource -> {
+                            Image(
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp)
+                                    .size(380.dp)
+                                    .clickable(
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        indication = null,
+                                        onClick = {
+                                            memeIndex = -1
+                                        }
+                                    ),
+                                contentScale = ContentScale.Crop,
+                                painter = painterResource(resource = it),
+                                contentDescription = "meme"
+                            )
+                        }
+
+                        is String -> {
+                            AsyncImage(
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp)
+                                    .size(380.dp)
+                                    .clickable(
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        indication = null,
+                                        onClick = {
+                                            memeIndex = -1
+                                        }
+                                    ),
+                                contentScale = ContentScale.Crop,
+                                model = it,
+                                contentDescription = "Meme Image"
+                            )
+                        }
+
+                        else -> Unit
+                    }
                 }
 
                 listOfMemeText.forEach { data ->
